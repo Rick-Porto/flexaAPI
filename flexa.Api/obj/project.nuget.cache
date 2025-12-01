@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "SWWlaLxh+pc=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\rickm\\OneDrive\\Projetos\\GITHUB\\flexaAPI\\flexa.Api\\flexa.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\rickm\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.11\\microsoft.aspnetcore.openapi.9.0.11.nupkg.sha512",
+    "C:\\Users\\rickm\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
