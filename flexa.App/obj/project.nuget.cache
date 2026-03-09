@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Z1MYC7tbC9o=",
+  "dgSpecHash": "2phkeoFHCzE=",
   "success": true,
   "projectFilePath": "C:\\Users\\rickm\\OneDrive\\Projetos\\GITHUB\\flexaAPI\\flexa.App\\flexa.App.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\rickm\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.13\\microsoft.windowsdesktop.app.ref.9.0.13.nupkg.sha512",
+    "C:\\Users\\rickm\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.13\\microsoft.netcore.app.ref.9.0.13.nupkg.sha512",
+    "C:\\Users\\rickm\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.13\\microsoft.aspnetcore.app.ref.9.0.13.nupkg.sha512"
+  ],
   "logs": []
 }
