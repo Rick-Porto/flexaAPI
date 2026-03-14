@@ -14,3 +14,8 @@ obj/
 
 # Logs
 *.log
+
+# App Settings JSON
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
