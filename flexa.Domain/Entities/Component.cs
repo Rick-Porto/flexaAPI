@@ -3,10 +3,10 @@
 public class Component
 {
     public Guid Id { get; set; }
-    public string ElementType { get; set; }
-    public string Label { get; set; }
-    public string Model { get; set; }
-    public string Config { get; set; }
+    public required string ElementType { get; set; }
+    public required string Label { get; set; }
+    public string? Model { get; set; }
+    public string? Config { get; set; }
     public int Order { get; set; }
     public bool Required { get; set; }
 
@@ -15,5 +15,7 @@ public class Component
 
     // Navigation properties
     public Guid ScreenId { get; set; }
-    public Screen screen { get; set; }
+    public required Screen Screens { get; set; }
+    public ICollection<DataEntry> DataEntries { get; set; } = [];
+
 }
