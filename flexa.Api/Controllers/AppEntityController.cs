@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using flexa.App.Interfaces;
 using flexa.App.DTOs;
+using System;
+using System.Threading.Tasks;
 
 namespace flexa.Api.Controllers
 {
@@ -15,6 +17,40 @@ namespace flexa.Api.Controllers
             _service = service;
         }
 
-        // Implement controller methods
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _service.GetAllAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var result = await _service.GetByIdAsync(id);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] AppEntityRequest request)
+        {
+            await _service.AddAsync(request);
+            return CreatedAtAction(nameof(GetById), new { id = request.Id }, request);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] AppEntityRequest request)
+        {
+            await _service.UpdateAsync(id, request);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }

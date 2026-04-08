@@ -65,7 +65,7 @@ namespace flexa.Api.Extensions
             {
                 options.DocumentTitle = "FLEXA API Docs";
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                options.RoutePrefix = "FlexaSwagger"; // http://localhost:5000/flexaSwagger
+                options.RoutePrefix = "FlexaSwagger"; // http://localhost:PORTA/flexaSwagger
 
                 // UI Optional Settings:
                 options.DefaultModelsExpandDepth(-1); // Hide schemas
