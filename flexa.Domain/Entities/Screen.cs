@@ -9,9 +9,9 @@ public class Screen
     public DateTime UpdatedAt { get; set; }
 
     // Navigation properties
-    public Guid AppId { get; set; }
-    public required App Apps { get; set; }
-    public ICollection<Component>? Components { get; set; }
+    public Guid AppEntityId { get; set; }
+    public required AppEntity AppEntity { get; set; } = null!;
+    public ICollection<Component>? Components { get; set; } = [];
     public ICollection<DataEntry> DataEntries { get; set; } = [];
 
 }

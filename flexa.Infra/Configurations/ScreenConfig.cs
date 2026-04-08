@@ -19,9 +19,9 @@ namespace flexa.Infra.Configurations
             builder.Property(x => x.CreatedAt);
             builder.Property(x => x.UpdatedAt);
 
-            builder.HasOne(x => x.Apps)
+            builder.HasOne(x => x.AppEntity)
                    .WithMany(x => x.Screens)
-                   .HasForeignKey(x => x.AppId)
+                   .HasForeignKey(x => x.AppEntityId)
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }

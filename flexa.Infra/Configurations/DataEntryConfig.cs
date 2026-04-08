@@ -15,12 +15,12 @@ namespace flexa.Infra.Configurations
             builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.UpdatedAt).IsRequired();
 
-            builder.HasOne(x => x.Screens)
+            builder.HasOne(x => x.Screen)
                    .WithMany(x => x.DataEntries)
                    .HasForeignKey(x => x.ScreenId)
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(x => x.Components)
+            builder.HasOne(x => x.Component)
                    .WithMany(x => x.DataEntries)
                    .HasForeignKey(x => x.ComponentId)
                    .OnDelete(DeleteBehavior.Cascade);

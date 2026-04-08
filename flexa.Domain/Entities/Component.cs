@@ -15,7 +15,7 @@ public class Component
 
     // Navigation properties
     public Guid ScreenId { get; set; }
-    public required Screen Screens { get; set; }
+    public required Screen Screen { get; set; }
     public ICollection<DataEntry> DataEntries { get; set; } = [];
 
 }

@@ -3,7 +3,7 @@
 public class DataEntry
 {
     public Guid Id { get; set; }
-    public required string Config { get; set; }
+    public string? Config { get; set; }
     public string Data { get; set; } = "{}"; // data as JSON string
 
     public DateTime CreatedAt { get; set; }
@@ -11,8 +11,8 @@ public class DataEntry
 
     // Navigation properties
     public Guid ScreenId { get; set; }
-    public Screen? Screens { get; set; }
+    public Screen? Screen { get; set; } = null!;
 
     public Guid ComponentId { get; set; }      // qual componente ela pertence
-    public Component? Components { get; set; } = null!;
+    public Component? Component { get; set; } = null!;
 }

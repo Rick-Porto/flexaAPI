@@ -8,6 +8,7 @@ obj/
 # User files
 *.user
 *.suo
+CLAUDE.md
 
 # VS Code
 .vscode/

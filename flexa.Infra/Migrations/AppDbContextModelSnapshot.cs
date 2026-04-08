@@ -22,7 +22,7 @@ namespace flexa.Infra.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("flexa.Domain.Entities.App", b =>
+            modelBuilder.Entity("flexa.Domain.Entities.AppEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,16 +36,15 @@ namespace flexa.Infra.Migrations
                         .HasColumnType("character varying(500)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.ToTable("apps", (string)null);
+                    b.ToTable("app_entities", (string)null);
                 });
 
             modelBuilder.Entity("flexa.Domain.Entities.Component", b =>
@@ -104,7 +103,6 @@ namespace flexa.Infra.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Config")
-                        .IsRequired()
                         .HasColumnType("jsonb");
 
                     b.Property<DateTime>("CreatedAt")
@@ -137,7 +135,7 @@ namespace flexa.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AppId")
+                    b.Property<Guid>("AppEntityId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -156,53 +154,53 @@ namespace flexa.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppId");
+                    b.HasIndex("AppEntityId");
 
                     b.ToTable("screens", (string)null);
                 });
 
             modelBuilder.Entity("flexa.Domain.Entities.Component", b =>
                 {
-                    b.HasOne("flexa.Domain.Entities.Screen", "Screens")
+                    b.HasOne("flexa.Domain.Entities.Screen", "Screen")
                         .WithMany("Components")
                         .HasForeignKey("ScreenId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Screens");
+                    b.Navigation("Screen");
                 });
 
             modelBuilder.Entity("flexa.Domain.Entities.DataEntry", b =>
                 {
-                    b.HasOne("flexa.Domain.Entities.Component", "Components")
+                    b.HasOne("flexa.Domain.Entities.Component", "Component")
                         .WithMany("DataEntries")
                         .HasForeignKey("ComponentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("flexa.Domain.Entities.Screen", "Screens")
+                    b.HasOne("flexa.Domain.Entities.Screen", "Screen")
                         .WithMany("DataEntries")
                         .HasForeignKey("ScreenId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Components");
+                    b.Navigation("Component");
 
-                    b.Navigation("Screens");
+                    b.Navigation("Screen");
                 });
 
             modelBuilder.Entity("flexa.Domain.Entities.Screen", b =>
                 {
-                    b.HasOne("flexa.Domain.Entities.App", "Apps")
+                    b.HasOne("flexa.Domain.Entities.AppEntity", "AppEntity")
                         .WithMany("Screens")
-                        .HasForeignKey("AppId")
+                        .HasForeignKey("AppEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Apps");
+                    b.Navigation("AppEntity");
                 });
 
-            modelBuilder.Entity("flexa.Domain.Entities.App", b =>
+            modelBuilder.Entity("flexa.Domain.Entities.AppEntity", b =>
                 {
                     b.Navigation("Screens");
                 });

@@ -1,6 +1,6 @@
 namespace flexa.Domain.Entities;
 
-public class App
+public class AppEntity
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }
