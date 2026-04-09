@@ -1,7 +1,4 @@
 using flexa.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace flexa.Domain.Interfaces
 {

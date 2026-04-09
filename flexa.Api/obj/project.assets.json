@@ -1127,7 +1127,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "flexa.Domain": "1.0.0"
+          "flexa.Domain": "1.0.0",
+          "flexa.Infra": "1.0.0"
         },
         "compile": {
           "bin/placeholder/flexa.App.dll": {}

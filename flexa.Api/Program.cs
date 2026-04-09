@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Swagger via Exstension folder
 builder.Services.AddSwaggerExtension();
 builder.Services.AddControllers();
+builder.Services.AddApplicationServices();
 builder.Services.ConfigureDatabase(builder.Configuration);
 
 var app = builder.Build();

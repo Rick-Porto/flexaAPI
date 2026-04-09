@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using flexa.App.Interfaces;
 using flexa.App.DTOs;
 using System;
 using System.Threading.Tasks;
+using flexa.App.Interfaces;
 
 namespace flexa.Api.Controllers
 {
@@ -35,8 +35,10 @@ namespace flexa.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AppEntityRequest request)
         {
-            await _service.AddAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = request.Id }, request);
+            var result = await _service.AddAsync(request);
+            return CreatedAtAction(nameof(GetById), 
+                new { id = result.Id }, 
+                result);
         }
 
         [HttpPut("{id}")]

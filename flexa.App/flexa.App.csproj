@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\flexa.Domain\flexa.Domain.csproj" />
+    <ProjectReference Include="..\flexa.Infra\flexa.Infra.csproj" />
   </ItemGroup>
 
 </Project>

@@ -41,16 +41,27 @@ namespace flexa.App.Services
             };
         }
 
-        public async Task AddAsync(AppEntityRequest appRequest)
+        public async Task<AppEntityResponse?> AddAsync(AppEntityRequest appRequest)
         {
             var app = new Domain.Entities.AppEntity
             {
+                Id = Guid.NewGuid(),
                 Name = appRequest.Name,
                 Description = appRequest.Description,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-            await _repo.AddAsync(app);
+
+            await _repo.AddAsync(app); 
+            
+            return new AppEntityResponse
+            {
+                Id = app.Id,
+                Name = app.Name,
+                Description = app.Description,
+                CreatedAt = app.CreatedAt,
+                UpdatedAt = app.UpdatedAt
+            };
         }
 
         public async Task UpdateAsync(Guid id, AppEntityRequest appRequest)

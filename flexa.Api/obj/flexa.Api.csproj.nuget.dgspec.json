@@ -159,6 +159,9 @@
             "projectReferences": {
               "C:\\Users\\rickm\\OneDrive\\Projetos\\GITHUB\\flexaAPI\\flexa.Domain\\flexa.Domain.csproj": {
                 "projectPath": "C:\\Users\\rickm\\OneDrive\\Projetos\\GITHUB\\flexaAPI\\flexa.Domain\\flexa.Domain.csproj"
+              },
+              "C:\\Users\\rickm\\OneDrive\\Projetos\\GITHUB\\flexaAPI\\flexa.Infra\\flexa.Infra.csproj": {
+                "projectPath": "C:\\Users\\rickm\\OneDrive\\Projetos\\GITHUB\\flexaAPI\\flexa.Infra\\flexa.Infra.csproj"
               }
             }
           }
