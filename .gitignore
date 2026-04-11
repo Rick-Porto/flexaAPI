@@ -1,0 +1,21 @@
+# Visual Studio
+.vs/
+
+# Build
+bin/
+obj/
+
+# User files
+*.user
+*.suo
+CLAUDE.md
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# App Settings JSON
+appsettings.json
+appsettings.Development.json
