@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using flexa.App.DTOs;
+using flexa.App.DTOs.AppEntity;
 
 namespace flexa.App.Interfaces
 {
