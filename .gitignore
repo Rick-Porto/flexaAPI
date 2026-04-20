@@ -12,6 +12,7 @@ CLAUDE.md
 
 # VS Code
 .vscode/
+.claude
 
 # Logs
 *.log

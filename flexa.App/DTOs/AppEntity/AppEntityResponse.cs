@@ -1,5 +1,4 @@
-
-namespace flexa.App.DTOs
+namespace flexa.App.DTOs.AppEntity
 {
     public class AppEntityResponse
     {

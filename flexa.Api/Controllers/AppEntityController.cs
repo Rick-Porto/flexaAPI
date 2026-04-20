@@ -1,21 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using flexa.App.DTOs;
-using System;
-using System.Threading.Tasks;
 using flexa.App.Interfaces;
+using flexa.App.DTOs.AppEntity;
 
 namespace flexa.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AppEntityController : ControllerBase
+    public class AppEntityController(IAppEntityService service) : ControllerBase
     {
-        private readonly IAppEntityService _service;
-
-        public AppEntityController(IAppEntityService service)
-        {
-            _service = service;
-        }
+        private readonly IAppEntityService _service = service;
 
         [HttpGet]
         public async Task<IActionResult> GetAll()

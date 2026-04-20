@@ -1,6 +1,6 @@
 using flexa.App.Interfaces;
-using flexa.App.DTOs;
 using flexa.Domain.Interfaces;
+using flexa.App.DTOs.AppEntity;
 
 namespace flexa.App.Services
 {

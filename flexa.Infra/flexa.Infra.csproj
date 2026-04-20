@@ -20,8 +20,4 @@
     <ProjectReference Include="..\flexa.Domain\flexa.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>
