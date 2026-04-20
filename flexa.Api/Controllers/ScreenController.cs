@@ -1,14 +1,35 @@
-using Microsoft.AspNetCore.Mvc;
 using flexa.App.DTOs.Screen;
 using flexa.App.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace flexa.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ScreenController(IScreenService service) : ControllerBase
     {
         private readonly IScreenService _service = service;
+
+        // Helper to get the logged-in user's Supabase ID
+        private string UserId => User.FindFirstValue("sub")
+            ?? throw new UnauthorizedAccessException();
+
+        [HttpGet("debug-token")]
+        [AllowAnonymous]
+        public IActionResult DebugToken([FromServices] IConfiguration config)
+        {
+            var secret = config["Supabase:JwtSecret"];
+            var url = config["Supabase:Url"];
+            return Ok(new
+            {
+                secretLength = secret?.Length,
+                secretFirst5 = secret?.Substring(0, 5),
+                url
+            });
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ScreenResponse>>> GetAll()

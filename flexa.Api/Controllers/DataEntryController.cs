@@ -1,14 +1,21 @@
 ﻿using flexa.App.DTOs.DataEntry;
 using flexa.App.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace flexa.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class DataEntryController(IDataEntryService service) : ControllerBase
 {
     private readonly IDataEntryService _service = service;
+
+    // Helper to get the logged-in user's Supabase ID
+    private string UserId => User.FindFirstValue("sub")
+        ?? throw new UnauthorizedAccessException();
 
     [HttpGet]
     public async Task<IActionResult> GetAll()

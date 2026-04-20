@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("flexa.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45fa9abf7806091e5122d67d3aeddeffdebdefcb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d973565ade8b6be9fcce0af743dc0b92c2291a9")]
 [assembly: System.Reflection.AssemblyProductAttribute("flexa.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("flexa.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
