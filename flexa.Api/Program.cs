@@ -1,14 +1,25 @@
 using flexa.Api.Extensions;
+using flexa.Utils.Converters;
+using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Swagger via Exstension folder
+builder.Configuration
+      .SetBasePath(builder.Environment.ContentRootPath)
+      .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+      .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+      .AddEnvironmentVariables();
+
 builder.Services.AddSwaggerExtension();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.Converters.Add(new BrazilDateTimeConverter());
+    });
+
 builder.Services.AddApplicationServices();
 builder.Services.ConfigureDatabase(builder.Configuration);
 
-// AUTH Services
 builder.Services.AddSupabaseAuth(builder.Configuration);
 builder.Services.AddAuthorization();
 
@@ -17,12 +28,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerExtension();
+    IdentityModelEventSource.ShowPII = true;
+    IdentityModelEventSource.LogCompleteSecurityArtifact = true;
+}
+else
+{
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
-
-//// If using ASP.NET Core's built-in authentication/authorization, these would be necessary.
-app.UseAuthentication();   // If using ASP.NET Core auth schemes   
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
