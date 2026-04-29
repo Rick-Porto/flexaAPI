@@ -7,59 +7,47 @@ using System.Security.Claims;
 namespace flexa.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/screens")]
     [Authorize]
-    public class ScreenController(IScreenService service) : ControllerBase
+    public class ScreenController : ControllerBase
     {
-        private readonly IScreenService _service = service;
-
-        // Helper to get the logged-in user's Supabase ID
+        private readonly IScreenService _screenService;
         private string UserId => User.FindFirstValue("sub")
-            ?? throw new UnauthorizedAccessException();
+        ?? throw new UnauthorizedAccessException();
 
-        [HttpGet("debug-token")]
-        [AllowAnonymous]
-        public IActionResult DebugToken([FromServices] IConfiguration config)
+        public ScreenController(IScreenService screenService)
         {
-            var secret = config["Supabase:JwtSecret"];
-            var url = config["Supabase:Url"];
-            return Ok(new
-            {
-                secretLength = secret?.Length,
-                secretFirst5 = secret?.Substring(0, 5),
-                url
-            });
+            _screenService = screenService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ScreenResponse>>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
+            var screens = await _screenService.GetAllAsync(UserId);
+            return Ok(screens);
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<ActionResult<ScreenResponse>> GetById(Guid id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null) return NotFound();
-            return Ok(result);
+            var screen = await _screenService.GetByIdAsync(id, UserId);
+            return screen != null ? Ok(screen) : NotFound();
         }
 
         [HttpPost]
-        public async Task<ActionResult<ScreenResponse>> Create([FromBody] ScreenRequest request)
+        public async Task<IActionResult> Add([FromBody] ScreenRequest request)
         {
-            var created = await _service.CreateAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            var screen = await _screenService.AddAsync(request, UserId);
+            return CreatedAtAction(nameof(GetById), new { id = screen.Id }, screen);
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<ActionResult<ScreenResponse>> Update(Guid id, [FromBody] ScreenRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] ScreenRequest request)
         {
             try
             {
-                var updated = await _service.UpdateAsync(id, request);
-                return Ok(updated);
+                await _screenService.UpdateAsync(id, request, UserId);
+                return NoContent();
             }
             catch (KeyNotFoundException)
             {
@@ -67,11 +55,12 @@ namespace flexa.Api.Controllers
             }
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            await _service.DeleteAsync(id);
+            await _screenService.DeleteAsync(id, UserId);
             return NoContent();
         }
     }
 }
+

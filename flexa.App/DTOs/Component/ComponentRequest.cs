@@ -8,5 +8,5 @@ public class ComponentRequest
     public string? Config { get; set; }
     public int Order { get; set; }
     public bool Required { get; set; }
-    public Guid ScreenId { get; set; }
+    public int ScreenId { get; set; }
 }

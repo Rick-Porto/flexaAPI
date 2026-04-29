@@ -1,14 +1,14 @@
-﻿using flexa.Domain.Entities;
+using flexa.Domain.Entities;
 
 namespace flexa.Domain.Interfaces;
 
 public interface IDataEntryRepository
 {
-    Task<IEnumerable<DataEntry>> GetAllAsync();
-    Task<DataEntry?> GetByIdAsync(Guid id);
-    Task<IEnumerable<DataEntry>> GetByScreenIdAsync(Guid screenId);
-    Task<IEnumerable<DataEntry>> GetByComponentIdAsync(Guid componentId);
-    Task<DataEntry> AddAsync(DataEntry entity);
-    Task<DataEntry> UpdateAsync(DataEntry entity);
-    Task<bool> DeleteAsync(Guid id);
+    Task<IEnumerable<DataEntry>> GetAllAsync(string userId);
+    Task<DataEntry?> GetByIdAsync(int id, string userId);
+    Task<IEnumerable<DataEntry>> GetByScreenIdAsync(int screenId, string userId);
+    Task<IEnumerable<DataEntry>> GetByComponentIdAsync(int componentId, string userId);
+    Task<DataEntry> AddAsync(DataEntry entity, string userId);
+    Task<DataEntry?> UpdateAsync(DataEntry entity, string userId);
+    Task<bool> DeleteAsync(int id, string userId);
 }

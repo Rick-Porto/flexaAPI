@@ -5,48 +5,61 @@ using Microsoft.EntityFrameworkCore;
 
 namespace flexa.Infra.Repositories;
 
-public class ComponentRepository : IComponentRepository
+public class ComponentRepository(AppDbContext context) : IComponentRepository
 {
-    private readonly AppDbContext _context;
+    private readonly AppDbContext _context = context;
 
-    public ComponentRepository(AppDbContext context) => _context = context;
-
-    public async Task<IEnumerable<Component>> GetAllAsync()
+    // JOIN Component → Screen → AppEntity.UserId
+    public async Task<IEnumerable<Component>> GetAllAsync(string userId)
     {
         return await _context.Components
+            .Where(c => c.Screen.AppEntity.UserId == userId)
             .Include(c => c.DataEntries)
             .AsNoTracking()
             .ToListAsync();
     }
 
-    public async Task<Component?> GetByIdAsync(Guid id)
+    // AND no UserId — impede user A de ler component de user B pelo GUID
+    public async Task<Component?> GetByIdAsync(int id, string userId)
     {
         return await _context.Components
+            .Where(c => c.Id == id && c.Screen.AppEntity.UserId == userId)
             .Include(c => c.DataEntries)
             .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Id == id);
+            .FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<Component>> GetComponentsByScreenIdAsync(Guid screenId)
+    // Só retorna components de screens que pertencem ao usuário
+    public async Task<IEnumerable<Component>> GetComponentsByScreenIdAsync(int screenId, string userId)
     {
         return await _context.Components
-            .Where(c => c.ScreenId == screenId)
+            .Where(c => c.ScreenId == screenId && c.Screen.AppEntity.UserId == userId)
             .Include(c => c.DataEntries)
             .AsNoTracking()
             .ToListAsync();
     }
 
-    public async Task<Component> AddAsync(Component component)
+    // Verifica que o ScreenId informado pertence ao usuário antes de inserir
+    public async Task<Component> AddAsync(Component component, string userId)
     {
+        var screenExists = await _context.Screens
+            .AnyAsync(s => s.Id == component.ScreenId && s.AppEntity.UserId == userId);
+
+        if (!screenExists)
+            throw new KeyNotFoundException("Screen não encontrado para este usuário.");
+
         await _context.Components.AddAsync(component);
         await _context.SaveChangesAsync();
         return component;
     }
 
-    public async Task<Component> UpdateAsync(Component component)
+    // Só atualiza se o component pertence ao usuário (via Screen → AppEntity)
+    public async Task<Component?> UpdateAsync(Component component, string userId)
     {
-        var existing = await _context.Components.FindAsync(component.Id)
-            ?? throw new KeyNotFoundException($"Component {component.Id} not found.");
+        var existing = await _context.Components
+            .FirstOrDefaultAsync(c => c.Id == component.Id && c.Screen.AppEntity.UserId == userId);
+
+        if (existing is null) return null;
 
         existing.ElementType = component.ElementType;
         existing.Label = component.Label;
@@ -60,10 +73,14 @@ public class ComponentRepository : IComponentRepository
         return existing;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    // Só deleta se o component pertence ao usuário
+    public async Task<bool> DeleteAsync(int id, string userId)
     {
-        var entity = await _context.Components.FindAsync(id);
+        var entity = await _context.Components
+            .FirstOrDefaultAsync(c => c.Id == id && c.Screen.AppEntity.UserId == userId);
+
         if (entity is null) return false;
+
         _context.Components.Remove(entity);
         await _context.SaveChangesAsync();
         return true;

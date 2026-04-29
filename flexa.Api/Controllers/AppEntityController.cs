@@ -9,50 +9,55 @@ namespace flexa.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    
     public class AppEntityController(IAppEntityService service) : ControllerBase
     {
         private readonly IAppEntityService _service = service;
 
-        // Helper to get the logged-in user's Supabase ID
+        // Lê o user ID do JWT validado — nunca do body/query string
         private string UserId => User.FindFirstValue("sub")
-            ?? throw new UnauthorizedAccessException();
+            ?? throw new UnauthorizedAccessException("User identity missing from token.");
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _service.GetAllAsync();
+            var result = await _service.GetAllAsync(UserId);
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null) return NotFound();
+            // Retorna 404 se o app existir mas pertencer a outro usuário
+            var result = await _service.GetByIdAsync(id, UserId);
+            if (result is null) return NotFound();
             return Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AppEntityRequest request)
         {
-            var result = await _service.AddAsync(request);
-            return CreatedAtAction(nameof(GetById), 
-                new { id = result.Id }, 
-                result);
+            var result = await _service.AddAsync(request, UserId);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] AppEntityRequest request)
         {
-            await _service.UpdateAsync(id, request);
-            return NoContent();
+            try
+            {
+                await _service.UpdateAsync(id, request, UserId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _service.DeleteAsync(id);
+            await _service.DeleteAsync(id, UserId);
             return NoContent();
         }
     }

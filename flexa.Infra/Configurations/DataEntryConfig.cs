@@ -1,4 +1,4 @@
-﻿using flexa.Domain.Entities;
+using flexa.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,6 +10,8 @@ namespace flexa.Infra.Configurations
         {
             builder.ToTable("data_entries");
             builder.HasKey(x => x.Id);
+
+            // ✅ SEM UserId — ownership verificado via JOIN Screen → AppEntity.UserId
             builder.Property(x => x.Data).IsRequired().HasColumnType("jsonb").HasDefaultValue("{}");
             builder.Property(x => x.Config).HasColumnType("jsonb");
             builder.Property(x => x.CreatedAt).IsRequired();

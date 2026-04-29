@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -12,38 +13,41 @@ namespace flexa.Infra.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "apps",
+                name: "app_entities",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "character varying(36)", maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_apps", x => x.Id);
+                    table.PrimaryKey("PK_app_entities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "screens",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    AppId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<string>(type: "character varying(36)", maxLength: 36, nullable: false),
+                    AppEntityId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_screens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_screens_apps_AppId",
-                        column: x => x.AppId,
-                        principalTable: "apps",
+                        name: "FK_screens_app_entities_AppEntityId",
+                        column: x => x.AppEntityId,
+                        principalTable: "app_entities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -52,7 +56,8 @@ namespace flexa.Infra.Migrations
                 name: "components",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ElementType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Label = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Model = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -61,7 +66,8 @@ namespace flexa.Infra.Migrations
                     Required = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ScreenId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<string>(type: "character varying(36)", maxLength: 36, nullable: false),
+                    ScreenId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,13 +84,15 @@ namespace flexa.Infra.Migrations
                 name: "data_entries",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Config = table.Column<string>(type: "jsonb", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Config = table.Column<string>(type: "jsonb", nullable: true),
                     Data = table.Column<string>(type: "jsonb", nullable: false, defaultValue: "{}"),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ScreenId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ComponentId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    ScreenId = table.Column<int>(type: "integer", nullable: false),
+                    ComponentId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,9 +127,9 @@ namespace flexa.Infra.Migrations
                 column: "ScreenId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_screens_AppId",
+                name: "IX_screens_AppEntityId",
                 table: "screens",
-                column: "AppId");
+                column: "AppEntityId");
         }
 
         /// <inheritdoc />
@@ -137,7 +145,7 @@ namespace flexa.Infra.Migrations
                 name: "screens");
 
             migrationBuilder.DropTable(
-                name: "apps");
+                name: "app_entities");
         }
     }
 }

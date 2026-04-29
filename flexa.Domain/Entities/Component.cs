@@ -2,7 +2,8 @@
 
 public class Component
 {
-    public Guid Id { get; set; }
+
+    public int Id { get; set; }
     public required string ElementType { get; set; }
     public required string Label { get; set; }
     public string? Model { get; set; }
@@ -13,8 +14,12 @@ public class Component
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
+    // Supabase user ID do claim "sub" do JWT.
+    // Cada app pertence a exatamente um usuário.
+    public string UserId { get; set; } = string.Empty;
+
     // Navigation properties
-    public Guid ScreenId { get; set; }
+    public int ScreenId { get; set; }
     public required Screen Screen { get; set; }
     public ICollection<DataEntry> DataEntries { get; set; } = [];
 
