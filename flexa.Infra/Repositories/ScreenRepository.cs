@@ -2,7 +2,7 @@ using flexa.Domain.Entities;
 using flexa.Domain.Interfaces;
 using flexa.Infra.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace flexa.Infra.Repositories
 {
@@ -15,7 +15,7 @@ namespace flexa.Infra.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable> GetAllAsync(string userId)
+        public async Task<IEnumerable<Screen>> GetAllAsync(string userId)
         {
             return await _context.Screens
                 .Include(s => s.Components)
