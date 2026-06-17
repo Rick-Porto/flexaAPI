@@ -20,6 +20,13 @@ namespace flexa.Infra.Configurations
             builder.Property(a => a.Description).HasMaxLength(500);
             builder.Property(a => a.CreatedAt).IsRequired();
             builder.Property(a => a.UpdatedAt).IsRequired();
+
+            // Public link for sharing/publishing the app
+            builder.Property(x => x.PublicLink)
+                    .HasMaxLength(100);
+
+            builder.HasIndex(x => x.PublicLink)
+                   .IsUnique();
         }
     }
 }

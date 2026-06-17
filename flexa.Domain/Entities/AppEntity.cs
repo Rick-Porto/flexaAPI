@@ -15,5 +15,8 @@ public class AppEntity
     // Navigation properties
     public ICollection<Screen>? Screens { get; set; } = [];
 
+    // Public link/token for sharing/publishing the app
+    public string? PublicLink { get; set; }
+
 }
 

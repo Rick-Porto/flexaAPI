@@ -24,6 +24,13 @@ namespace flexa.Infra.Repositories
                 .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId);
         }
 
+        public async Task<AppEntity?> GetByPublicLinkAsync(string publicLink)
+        {
+            return await _context.AppEntities
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.PublicLink == publicLink);
+        }
+
         public async Task AddAsync(AppEntity app)
         {
             await _context.AppEntities.AddAsync(app);
@@ -38,6 +45,7 @@ namespace flexa.Infra.Repositories
 
             existing.Name = app.Name;
             existing.Description = app.Description;
+            existing.PublicLink = app.PublicLink;
             existing.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

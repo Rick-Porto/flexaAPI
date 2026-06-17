@@ -39,6 +39,10 @@ namespace flexa.Infra.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<string>("PublicLink")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -48,6 +52,9 @@ namespace flexa.Infra.Migrations
                         .HasColumnType("character varying(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PublicLink")
+                        .IsUnique();
 
                     b.ToTable("app_entities", (string)null);
                 });

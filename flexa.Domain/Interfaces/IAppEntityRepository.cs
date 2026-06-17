@@ -9,5 +9,6 @@ namespace flexa.Domain.Interfaces
         Task AddAsync(AppEntity app);
         Task UpdateAsync(AppEntity app);
         Task DeleteAsync(Guid id, string userId);
+        Task<AppEntity?> GetByPublicLinkAsync(string publicLink);
     }
 }

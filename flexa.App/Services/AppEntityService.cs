@@ -13,13 +13,15 @@ namespace flexa.App.Services
         {
             _repo = repo;
         }
+
         private static AppEntityResponse MapToResponse(AppEntity e) => new()
         {
             Id = e.Id,
             Name = e.Name,
             Description = e.Description,
             CreatedAt = e.CreatedAt,
-            UpdatedAt = e.UpdatedAt
+            UpdatedAt = e.UpdatedAt,
+            PublicLink = e.PublicLink
             // UserId propositalmente não exposto na response
         };
 
@@ -29,7 +31,6 @@ namespace flexa.App.Services
             return entities.Select(MapToResponse);
         }
 
-        // Implement other methods
         public async Task<AppEntityResponse?> GetByIdAsync(Guid id, string userId)
         {
             var entity = await _repo.GetByIdAsync(id, userId);
@@ -50,15 +51,7 @@ namespace flexa.App.Services
 
             await _repo.AddAsync(app);
 
-            return new AppEntityResponse
-            {
-                Id = app.Id,
-                Name = app.Name,
-                Description = app.Description,
-                CreatedAt = app.CreatedAt,
-                UpdatedAt = app.UpdatedAt,
-                UserId = userId  // ✅ vem do JWT, nunca do body do request
-            };
+            return MapToResponse(app);
         }
 
         public async Task UpdateAsync(Guid id, AppEntityRequest request, string userId)
@@ -77,6 +70,41 @@ namespace flexa.App.Services
         public async Task DeleteAsync(Guid id, string userId)
         {
             await _repo.DeleteAsync(id, userId);
+        }
+
+        public async Task<AppEntityResponse?> PublishAsync(Guid id, string userId)
+        {
+            var entity = await _repo.GetByIdAsync(id, userId);
+            if (entity is null) return null;
+
+            // Generate a unique public link if not already set
+            if (string.IsNullOrEmpty(entity.PublicLink))
+            {
+                entity.PublicLink = Guid.NewGuid().ToString("N")[..12]; // 12-char unique link
+            }
+
+            entity.UpdatedAt = DateTime.UtcNow;
+            await _repo.UpdateAsync(entity);
+
+            return MapToResponse(entity);
+        }
+
+        public async Task<AppEntityResponse?> UnpublishAsync(Guid id, string userId)
+        {
+            var entity = await _repo.GetByIdAsync(id, userId);
+            if (entity is null) return null;
+
+            entity.PublicLink = null;
+            entity.UpdatedAt = DateTime.UtcNow;
+            await _repo.UpdateAsync(entity);
+
+            return MapToResponse(entity);
+        }
+
+        public async Task<AppEntityResponse?> GetByPublicLinkAsync(string publicLink)
+        {
+            var entity = await _repo.GetByPublicLinkAsync(publicLink);
+            return entity is null ? null : MapToResponse(entity);
         }
     }
 }

@@ -60,5 +60,39 @@ namespace flexa.Api.Controllers
             await _service.DeleteAsync(id, UserId);
             return NoContent();
         }
+
+        /// <summary>
+        /// Publishes the app by generating a public link.
+        /// </summary>
+        [HttpPost("{id:guid}/publish")]
+        public async Task<IActionResult> Publish(Guid id)
+        {
+            var result = await _service.PublishAsync(id, UserId);
+            if (result is null) return NotFound();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Unpublishes the app by removing the public link.
+        /// </summary>
+        [HttpPost("{id:guid}/unpublish")]
+        public async Task<IActionResult> Unpublish(Guid id)
+        {
+            var result = await _service.UnpublishAsync(id, UserId);
+            if (result is null) return NotFound();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Gets an app by its public link (no auth required - for public access).
+        /// </summary>
+        [HttpGet("public/{publicLink}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByPublicLink(string publicLink)
+        {
+            var result = await _service.GetByPublicLinkAsync(publicLink);
+            if (result is null) return NotFound();
+            return Ok(result);
+        }
     }
 }

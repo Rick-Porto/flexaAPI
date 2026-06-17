@@ -7,6 +7,7 @@ namespace flexa.App.DTOs.AppEntity
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string? PublicLink { get; set; }
 
         public string UserId { get; set; } = string.Empty; // ✅ vem do JWT, nunca do body do request
     }
