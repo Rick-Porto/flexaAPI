@@ -42,6 +42,15 @@ public class ComponentRepository(AppDbContext context) : IComponentRepository
     // Verifica que o ScreenId informado pertence ao usuário antes de inserir
     public async Task<Component> AddAsync(Component component, string userId)
     {
+        if (string.IsNullOrWhiteSpace(component.UserId))
+            component.UserId = userId;
+
+        if (component.CreatedAt == default)
+            component.CreatedAt = DateTime.UtcNow;
+
+        if (component.UpdatedAt == default)
+            component.UpdatedAt = DateTime.UtcNow;
+
         var screenExists = await _context.Screens
             .AnyAsync(s => s.Id == component.ScreenId && s.AppEntity.UserId == userId);
 

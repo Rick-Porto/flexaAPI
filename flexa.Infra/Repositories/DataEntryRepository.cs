@@ -37,6 +37,15 @@ public class DataEntryRepository(AppDbContext context) : IDataEntryRepository
     // ✅ Verifica ownership do ScreenId e ComponentId antes de inserir
     public async Task<DataEntry> AddAsync(DataEntry entity, string userId)
     {
+        if (string.IsNullOrWhiteSpace(entity.UserId))
+            entity.UserId = userId;
+
+        if (entity.CreatedAt == default)
+            entity.CreatedAt = DateTime.UtcNow;
+
+        if (entity.UpdatedAt == default)
+            entity.UpdatedAt = DateTime.UtcNow;
+
         var screenValid = await _context.Screens
             .AnyAsync(s => s.Id == entity.ScreenId && s.AppEntity.UserId == userId);
         if (!screenValid)
@@ -46,7 +55,6 @@ public class DataEntryRepository(AppDbContext context) : IDataEntryRepository
             .AnyAsync(c => c.Id == entity.ComponentId && c.Screen.AppEntity.UserId == userId);
         if (!componentValid)
             throw new KeyNotFoundException("Component não encontrado para este usuário.");
-
 
         await _context.DataEntries.AddAsync(entity);
         await _context.SaveChangesAsync();

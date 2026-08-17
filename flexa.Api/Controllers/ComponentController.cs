@@ -15,7 +15,8 @@ public class ComponentController(IComponentService service) : ControllerBase
 
     // Helper to get the logged-in user's Supabase ID
     private string UserId => User.FindFirstValue("sub")
-        ?? throw new UnauthorizedAccessException();
+        ?? User.FindFirstValue(ClaimTypes.NameIdentifier)
+        ?? throw new UnauthorizedAccessException("User identity missing from token.");
 
     [HttpGet]
     public async Task<IActionResult> GetAll()

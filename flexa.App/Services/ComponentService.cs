@@ -30,6 +30,8 @@ public class ComponentService(IComponentRepository repo) : IComponentService
 
     public async Task<ComponentResponse> CreateAsync(ComponentRequest request, string userId)
     {
+        var now = DateTime.UtcNow;
+
         var entity = new Component
         {
             ElementType = request.ElementType,
@@ -39,6 +41,9 @@ public class ComponentService(IComponentRepository repo) : IComponentService
             Order = request.Order,
             Required = request.Required,
             ScreenId = request.ScreenId,
+            UserId = string.IsNullOrWhiteSpace(userId) ? string.Empty : userId,
+            CreatedAt = now,
+            UpdatedAt = now,
             Screen = null!
         };
 

@@ -14,6 +14,7 @@ public class DataEntryController(IDataEntryService service) : ControllerBase
     private readonly IDataEntryService _service = service;
 
     private string UserId => User.FindFirstValue("sub")
+        ?? User.FindFirstValue(ClaimTypes.NameIdentifier)
         ?? throw new UnauthorizedAccessException("User identity missing from token.");
 
     [HttpGet]

@@ -35,12 +35,17 @@ public class DataEntryService(IDataEntryRepository repo) : IDataEntryService
 
     public async Task<DataEntryResponse> CreateAsync(DataEntryRequest request, string userId)
     {
+        var now = DateTime.UtcNow;
+
         var entity = new DataEntry
         {
             Config      = request.Config,
             Data        = request.Data,
             ScreenId    = request.ScreenId,
-            ComponentId = request.ComponentId
+            ComponentId = request.ComponentId,
+            UserId      = string.IsNullOrWhiteSpace(userId) ? string.Empty : userId,
+            CreatedAt   = now,
+            UpdatedAt   = now
         };
 
         // repositório valida ownership e seta Id, CreatedAt, UpdatedAt
