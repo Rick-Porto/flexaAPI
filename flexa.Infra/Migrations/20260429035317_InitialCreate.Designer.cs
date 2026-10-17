@@ -12,8 +12,8 @@ using flexa.Infra.Data;
 namespace flexa.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260408032021_fixAppName")]
-    partial class fixAppName
+    [Migration("20260429035317_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,11 @@ namespace flexa.Infra.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("character varying(36)");
+
                     b.HasKey("Id");
 
                     b.ToTable("app_entities", (string)null);
@@ -52,9 +57,11 @@ namespace flexa.Infra.Migrations
 
             modelBuilder.Entity("flexa.Domain.Entities.Component", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Config")
                         .HasColumnType("jsonb");
@@ -83,11 +90,16 @@ namespace flexa.Infra.Migrations
                     b.Property<bool>("Required")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("ScreenId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("ScreenId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("character varying(36)");
 
                     b.HasKey("Id");
 
@@ -98,12 +110,14 @@ namespace flexa.Infra.Migrations
 
             modelBuilder.Entity("flexa.Domain.Entities.DataEntry", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("ComponentId")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ComponentId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Config")
                         .HasColumnType("jsonb");
@@ -117,11 +131,15 @@ namespace flexa.Infra.Migrations
                         .HasColumnType("jsonb")
                         .HasDefaultValue("{}");
 
-                    b.Property<Guid>("ScreenId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("ScreenId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -134,9 +152,11 @@ namespace flexa.Infra.Migrations
 
             modelBuilder.Entity("flexa.Domain.Entities.Screen", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<Guid>("AppEntityId")
                         .HasColumnType("uuid");
@@ -154,6 +174,11 @@ namespace flexa.Infra.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("character varying(36)");
 
                     b.HasKey("Id");
 

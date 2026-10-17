@@ -10,6 +10,12 @@ namespace flexa.Infra.Configurations
         {
             builder.ToTable("components");
             builder.HasKey(x => x.Id);
+
+            // Nova coluna user_id — UUID do Supabase (36 chars com hífens)
+            builder.Property(a => a.UserId)
+                   .IsRequired()
+                   .HasMaxLength(36);
+
             builder.Property(x => x.ElementType).IsRequired().HasMaxLength(50);
             builder.Property(x => x.Label).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Model).IsRequired().HasMaxLength(100);

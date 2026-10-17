@@ -20,3 +20,5 @@ CLAUDE.md
 # App Settings JSON
 appsettings.json
 appsettings.Development.json
+/flexa.Api/appsettings.Development.json
+/flexa.Api/appsettings.Development.json
