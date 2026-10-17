@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+
+COPY flexa.Api/flexa.Api.csproj flexa.Api/
+COPY flexa.App/flexa.App.csproj flexa.App/
+COPY flexa.Domain/flexa.Domain.csproj flexa.Domain/
+COPY flexa.Infra/flexa.Infra.csproj flexa.Infra/
+COPY flexa.Utils/flexa.Utils.csproj flexa.Utils/
+RUN dotnet restore flexa.Api/flexa.Api.csproj
+
+COPY . .
+RUN dotnet publish flexa.Api/flexa.Api.csproj -c Release --no-restore -o /app/publish /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble-chiseled
+WORKDIR /app
+COPY --from=build /app/publish ./
+ENV PORT=8080 DOTNET_EnableDiagnostics=0
+ENTRYPOINT ["dotnet", "flexa.Api.dll"]

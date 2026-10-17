@@ -12,8 +12,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(5000);
-    options.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps());
+    var port = Environment.GetEnvironmentVariable("PORT");
+    if (port is not null)
+    {
+        options.ListenAnyIP(int.Parse(port));
+    }
+    else
+    {
+        options.ListenAnyIP(5000);
+        options.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps());
+    }
 });
 
 builder.Configuration
