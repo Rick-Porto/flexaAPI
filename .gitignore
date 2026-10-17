@@ -1,0 +1,24 @@
+# Visual Studio
+.vs/
+
+# Build
+bin/
+obj/
+
+# User files
+*.user
+*.suo
+CLAUDE.md
+
+# VS Code
+.vscode/
+.claude
+
+# Logs
+*.log
+
+# App Settings JSON
+appsettings.json
+appsettings.Development.json
+/flexa.Api/appsettings.Development.json
+/flexa.Api/appsettings.Development.json

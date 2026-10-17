@@ -1,0 +1,6 @@
+@flexa.Api_HostAddress = http://localhost:5078
+
+GET {{flexa.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
