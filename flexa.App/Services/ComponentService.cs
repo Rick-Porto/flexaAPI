@@ -6,35 +6,34 @@ using flexa.Domain.Interfaces;
 
 namespace flexa.App.Services;
 
-public class ComponentService : IComponentService
+public class ComponentService(IComponentRepository repo) : IComponentService
 {
-    private readonly IComponentRepository _repo;
+    private readonly IComponentRepository _repo = repo;
 
-    public ComponentService(IComponentRepository repo) => _repo = repo;
-
-    public async Task<IEnumerable<ComponentResponse>> GetAllAsync()
+    public async Task<IEnumerable<ComponentResponse>> GetAllAsync(string userId)
     {
-        var entities = await _repo.GetAllAsync();
+        var entities = await _repo.GetAllAsync(userId);
         return entities.Select(MapToResponse);
     }
 
-    public async Task<ComponentResponse?> GetByIdAsync(Guid id)
+    public async Task<ComponentResponse?> GetByIdAsync(int id, string userId)
     {
-        var entity = await _repo.GetByIdAsync(id);
+        var entity = await _repo.GetByIdAsync(id, userId);
         return entity is null ? null : MapToResponse(entity);
     }
 
-    public async Task<IEnumerable<ComponentResponse>> GetByScreenIdAsync(Guid screenId)
+    public async Task<IEnumerable<ComponentResponse>> GetByScreenIdAsync(int screenId, string userId)
     {
-        var entities = await _repo.GetComponentsByScreenIdAsync(screenId);
+        var entities = await _repo.GetComponentsByScreenIdAsync(screenId, userId);
         return entities.Select(MapToResponse);
     }
 
-    public async Task<ComponentResponse> CreateAsync(ComponentRequest request)
+    public async Task<ComponentResponse> CreateAsync(ComponentRequest request, string userId)
     {
+        var now = DateTime.UtcNow;
+
         var entity = new Component
         {
-            Id = Guid.NewGuid(),
             ElementType = request.ElementType,
             Label = request.Label,
             Model = request.Model,
@@ -42,33 +41,38 @@ public class ComponentService : IComponentService
             Order = request.Order,
             Required = request.Required,
             ScreenId = request.ScreenId,
-            Screen = null!,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UserId = string.IsNullOrWhiteSpace(userId) ? string.Empty : userId,
+            CreatedAt = now,
+            UpdatedAt = now,
+            Screen = null!
         };
 
-        var created = await _repo.AddAsync(entity);
+        // repositório valida o ScreenId e seta Id, CreatedAt, UpdatedAt
+        var created = await _repo.AddAsync(entity, userId);
         return MapToResponse(created);
     }
 
-    public async Task<ComponentResponse?> UpdateAsync(Guid id, ComponentRequest request)
+    public async Task<ComponentResponse?> UpdateAsync(int id, ComponentRequest request, string userId)
     {
-        var existing = await _repo.GetByIdAsync(id);
-        if (existing is null) return null;
+        var entity = new Component
+        {
+            Id = id,
+            ElementType = request.ElementType,
+            Label = request.Label,
+            Model = request.Model,
+            Config = request.Config,
+            Order = request.Order,
+            Required = request.Required,
+            ScreenId = request.ScreenId,
+            Screen = null!
+        };
 
-        existing.ElementType = request.ElementType;
-        existing.Label = request.Label;
-        existing.Model = request.Model;
-        existing.Config = request.Config;
-        existing.Order = request.Order;
-        existing.Required = request.Required;
-        existing.UpdatedAt = DateTime.UtcNow;
-
-        var updated = await _repo.UpdateAsync(existing);
-        return MapToResponse(updated);
+        var updated = await _repo.UpdateAsync(entity, userId);
+        return updated is null ? null : MapToResponse(updated);
     }
 
-    public async Task<bool> DeleteAsync(Guid id) => await _repo.DeleteAsync(id);
+    public async Task<bool> DeleteAsync(int id, string userId)
+        => await _repo.DeleteAsync(id, userId);
 
     private static ComponentResponse MapToResponse(Component c) => new()
     {
@@ -87,10 +91,10 @@ public class ComponentService : IComponentService
             Id = de.Id,
             Config = de.Config,
             Data = de.Data,
-            CreatedAt = de.CreatedAt,
-            UpdatedAt = de.UpdatedAt,
             ScreenId = de.ScreenId,
-            ComponentId = de.ComponentId
+            ComponentId = de.ComponentId,
+            CreatedAt = de.CreatedAt,
+            UpdatedAt = de.UpdatedAt
         }).ToList()
     };
 }

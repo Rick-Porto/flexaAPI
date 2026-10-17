@@ -7,11 +7,11 @@ namespace flexa.Domain.Interfaces
 {
     public interface IComponentRepository
     {
-        Task<IEnumerable<Component>> GetAllAsync();
-        Task<Component?> GetByIdAsync(Guid id);
-        Task<IEnumerable<Component>> GetComponentsByScreenIdAsync(Guid screenId);
-        Task<Component> AddAsync(Component component);
-        Task<Component> UpdateAsync(Component component);
-        Task<bool> DeleteAsync(Guid id);
+        Task<IEnumerable<Component>> GetAllAsync(string userId);
+        Task<Component?> GetByIdAsync(int id, string userId);
+        Task<IEnumerable<Component>> GetComponentsByScreenIdAsync(int screenId, string userId);
+        Task<Component> AddAsync(Component component, string userId);
+        Task<Component?> UpdateAsync(Component component, string userId);
+        Task<bool> DeleteAsync(int id, string userId);
     }
 }
