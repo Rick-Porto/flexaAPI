@@ -297,3 +297,4 @@ flexa.Domain/              # entities and repository interfaces
 flexa.Infra/                # EF Core, repositories, configurations, and migrations
 flexa.Utils/                # utilities and converters
 ```
+
