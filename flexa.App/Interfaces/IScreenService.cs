@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using flexa.App.DTOs.Screen;
+using flexa.Domain.Entities;
 
-namespace flexa.App.Interfaces
+namespace flexa.App.Interfaces;
+
+public interface IScreenService
 {
-    public interface IScreenService
-    {
-        Task<IEnumerable<ScreenResponse>> GetAllAsync();
-        Task<ScreenResponse?> GetByIdAsync(Guid id);
-        Task<ScreenResponse> CreateAsync(ScreenRequest request);
-        Task<ScreenResponse> UpdateAsync(Guid id, ScreenRequest request);
-        Task DeleteAsync(Guid id);
-    }
+    Task<IEnumerable<ScreenResponse>> GetAllAsync(string userId);
+    Task<ScreenResponse?> GetByIdAsync(int id, string userId);
+    Task<ScreenResponse> AddAsync(ScreenRequest request, string userId);
+    Task UpdateAsync(int id, ScreenRequest request, string userId);
+    Task DeleteAsync(int id, string userId);
 }
