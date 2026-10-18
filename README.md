@@ -91,9 +91,11 @@ A API carrega `appsettings.json`, `appsettings.{Environment}.json` e variáveis d
 | `Supabase__Url` | `Supabase:Url` | URL do projeto Supabase. |
 | `Supabase__JwtSecret` | `Supabase:JwtSecret` | Segredo usado para validar JWTs. |
 | `ConnectionStrings__Supabase` | `ConnectionStrings:Supabase` | Connection string do PostgreSQL. |
-| `Cors__AllowedOrigins__0` | `Cors:AllowedOrigins:0` | Origem permitida para o frontend; use índices adicionais para outras origens. |
+| `Cors__AllowedOrigins__0` | `Cors:AllowedOrigins:0` | `https://flexa-theta.vercel.app` |
+| `Cors__AllowedOrigins__1` | `Cors:AllowedOrigins:1` | `https://flexa-orcin.vercel.app` |
+| `Cors__AllowedOrigins__2` | `Cors:AllowedOrigins:2` | `http://localhost:5173` |
 
-O CORS usa a política `Frontend`. Em produção, permita somente as origens necessárias. A API valida tokens; este repositório não contém endpoints de cadastro ou login do Supabase.
+Configure essas três variáveis no projeto Vercel da API, nos ambientes Production e Preview conforme necessário. O middleware CORS do ASP.NET Core responde às requisições preflight `OPTIONS` antes da autenticação e devolve a origem permitida correspondente. Não configure um `Access-Control-Allow-Origin` estático no `vercel.json`: uma resposta estática não pode refletir corretamente várias origens com credenciais. A API valida tokens; este repositório não contém endpoints de cadastro ou login do Supabase.
 
 > **Segurança:** `appsettings.json` e `appsettings.Development.json` atualmente contêm valores de credenciais. Não reutilize nem publique esses valores. Remova segredos dos arquivos versionados, invalide e rotacione credenciais já expostas e configure novos valores localmente ou em um cofre de segredos.
 
@@ -239,9 +241,11 @@ The API loads `appsettings.json`, `appsettings.{Environment}.json`, and environm
 | `Supabase__Url` | `Supabase:Url` | Supabase project URL. |
 | `Supabase__JwtSecret` | `Supabase:JwtSecret` | Secret used to validate JWTs. |
 | `ConnectionStrings__Supabase` | `ConnectionStrings:Supabase` | PostgreSQL connection string. |
-| `Cors__AllowedOrigins__0` | `Cors:AllowedOrigins:0` | Allowed frontend origin; configure additional indexes for more origins. |
+| `Cors__AllowedOrigins__0` | `Cors:AllowedOrigins:0` | `https://flexa-theta.vercel.app` |
+| `Cors__AllowedOrigins__1` | `Cors:AllowedOrigins:1` | `https://flexa-orcin.vercel.app` |
+| `Cors__AllowedOrigins__2` | `Cors:AllowedOrigins:2` | `http://localhost:5173` |
 
-CORS uses the `Frontend` policy. In production, allow only required origins. The API validates tokens; this repository does not contain Supabase sign-up or login endpoints.
+Set these variables in the API's Vercel project for Production and Preview as applicable. ASP.NET Core's CORS middleware handles `OPTIONS` preflight requests before authentication and returns the matching allowed origin. Do not add a static `Access-Control-Allow-Origin` header in `vercel.json`: a static response cannot correctly reflect multiple origins while supporting credentials. The API validates tokens; this repository does not contain Supabase sign-up or login endpoints.
 
 > **Security:** `appsettings.json` and `appsettings.Development.json` currently contain credential values. Do not reuse or publish them. Remove secrets from tracked files, revoke and rotate any credentials that have already been exposed, and configure replacement values locally or in a secrets vault.
 
